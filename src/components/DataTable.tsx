@@ -58,7 +58,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
         </div>
       )}
       
-      <div className="flex-1 w-full overflow-auto rounded-[2.5rem] border-4 border-white/20 glass relative shadow-[0_30px_60px_rgba(0,0,0,0.5)] custom-scrollbar min-h-[500px] bg-slate-900">
+      <div className="flex-1 w-full overflow-auto rounded-[2rem] border-2 border-white/10 glass relative shadow-[0_20px_40px_rgba(0,0,0,0.5)] custom-scrollbar min-h-0">
         <table className="w-full border-collapse text-xl min-w-[1800px]">
           <thead className="sticky top-0 z-20">
             {/* Row 1: Header Titles */}
@@ -66,7 +66,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
               {headers.map((header) => (
                 <th
                   key={`title-${header}`}
-                  className="text-left px-10 py-8 text-accent font-black tracking-tighter uppercase text-lg border-b border-white/5 align-bottom h-32"
+                  className="text-left px-4 py-3 text-accent font-black tracking-tighter uppercase text-xs border-b border-white/5 align-bottom h-16"
                 >
                   <div className="line-clamp-2" title={header}>
                     {header}
@@ -79,14 +79,14 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
               {headers.map((header) => (
                 <th
                   key={`filter-${header}`}
-                  className="px-8 py-5 border-b-2 border-white/10"
+                  className="px-3 py-2 border-b-2 border-white/10"
                 >
                   <div className="relative">
-                    <Search size={22} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                       type="text"
                       placeholder={`Search...`}
-                      className="w-full bg-slate-950/50 border-2 border-white/5 rounded-xl py-4 pl-12 pr-6 text-lg outline-none focus:border-accent focus:bg-slate-950 transition-all text-white font-bold placeholder:text-slate-700"
+                      className="w-full bg-slate-950/50 border border-white/5 rounded-lg py-2 pl-9 pr-3 text-xs outline-none focus:border-accent focus:bg-slate-950 transition-all text-white font-bold placeholder:text-slate-700"
                       value={columnFilters[header] || ""}
                       onChange={(e) => handleFilterChange(header, e.target.value)}
                     />
@@ -101,10 +101,10 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
                 {headers.map((header) => (
                   <td
                     key={`${i}-${header}`}
-                    className="px-10 py-7 text-slate-200 group-hover:text-white transition-colors"
+                    className="px-4 py-2 text-slate-200 group-hover:text-white transition-colors"
                   >
-                    <div className="max-w-[500px] truncate font-bold" title={String(row[header] || "")}>
-                      {row[header] || <span className="text-slate-800 italic text-base">null</span>}
+                    <div className="max-w-[300px] truncate font-bold text-xs" title={String(row[header] || "")}>
+                      {row[header] || <span className="text-slate-800 italic text-[10px]">null</span>}
                     </div>
                   </td>
                 ))}
@@ -123,7 +123,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
               <tr>
                 <td
                   colSpan={headers.length}
-                  className="p-16 text-center text-accent font-black bg-white/5 text-3xl tracking-tighter shadow-inner"
+                  className="p-8 text-center text-accent font-black bg-white/5 text-lg tracking-tighter"
                 >
                   ... and {filteredData.length - limit} more matching records (Export All Results to see all) ...
                 </td>
