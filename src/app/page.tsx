@@ -67,15 +67,15 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="flex-1 overflow-hidden flex flex-col items-center">
+      <div className="flex-1 overflow-hidden flex flex-col items-stretch">
         {status === "idle" && (
-          <div className="w-full max-w-2xl py-20 flex-1 flex flex-col justify-center">
+          <div className="w-full max-w-2xl py-20 flex-1 flex flex-col justify-center mx-auto">
             <FileUploader onFileSelect={handleFileSelect} isProcessing={false} />
           </div>
         )}
 
         {status === "processing" && (
-          <div className="w-full max-w-xl text-center py-40 flex-1 flex flex-col justify-center">
+          <div className="w-full max-w-xl text-center py-40 flex-1 flex flex-col justify-center mx-auto">
             <div className="w-full bg-white/5 rounded-full h-4 mb-8 overflow-hidden border border-white/5">
               <div 
                 className="h-full bg-primary-gradient shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-500 ease-out" 
@@ -88,7 +88,7 @@ export default function Home() {
         )}
 
         {status === "success" && (
-          <div className="w-full h-full overflow-hidden">
+          <div className="w-full flex-1 min-h-0 overflow-hidden">
             <ResultsDashboard 
               p1Data={data.p1} 
               p2Data={data.p2} 

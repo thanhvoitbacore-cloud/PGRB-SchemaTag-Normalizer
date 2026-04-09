@@ -49,7 +49,7 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col gap-6 w-full h-full overflow-hidden"
+      className="flex flex-col gap-6 w-full flex-1 min-h-0 overflow-hidden"
     >
       {/* Top Banner: Mini Result Stats */}
       <div className="flex flex-wrap gap-8 shrink-0">
@@ -137,7 +137,7 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="flex-1 overflow-hidden"
+          className="flex-1 min-h-0 overflow-hidden flex flex-col"
         >
           {activeTab === "p1" ? (
             <DataTable data={filteredP1} />

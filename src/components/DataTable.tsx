@@ -45,7 +45,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6 h-full overflow-hidden">
+    <div className="flex flex-col gap-6 flex-1 min-h-0 overflow-hidden">
       {Object.keys(columnFilters).length > 0 && (
         <div className="flex justify-end shrink-0">
           <button 
@@ -58,7 +58,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
         </div>
       )}
       
-      <div className="flex-1 w-full overflow-auto rounded-[2.5rem] border-2 border-white/5 glass relative shadow-[0_30px_60px_rgba(0,0,0,0.5)] custom-scrollbar h-full">
+      <div className="flex-1 w-full overflow-auto rounded-[2.5rem] border-2 border-white/5 glass relative shadow-[0_30px_60px_rgba(0,0,0,0.5)] custom-scrollbar min-h-0">
         <table className="w-full border-collapse text-xl min-w-[1800px]">
           <thead className="sticky top-0 z-20">
             {/* Row 1: Header Titles */}
