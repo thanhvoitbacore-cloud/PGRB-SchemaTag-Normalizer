@@ -37,7 +37,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-32 text-slate-400 italic bg-slate-900/50 rounded-3xl border-2 border-dashed border-white/5 glass">
+      <div className="flex flex-col items-center justify-center p-12 text-slate-400 italic bg-slate-900/50 rounded-3xl border-2 border-dashed border-white/5 glass">
         <FilterX size={48} className="mb-4 opacity-20" />
         <p className="text-xl font-medium">No records match your criteria.</p>
       </div>
@@ -45,7 +45,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6 flex-1 min-h-0 overflow-hidden">
+    <div className="flex flex-col gap-4 flex-1 min-h-0 overflow-hidden">
       {Object.keys(columnFilters).length > 0 && (
         <div className="flex justify-end shrink-0">
           <button 
@@ -58,7 +58,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
         </div>
       )}
       
-      <div className="flex-1 w-full overflow-auto rounded-xl border-2 border-white/20 glass relative shadow-2xl min-h-0 bg-slate-900/60 max-h-[calc(100vh-350px)]">
+      <div className="flex-1 w-full overflow-auto rounded-xl border-2 border-white/20 glass relative shadow-2xl min-h-0 bg-slate-900/60 max-h-full">
         <table className="w-full border-collapse text-[10px] min-w-[2500px] table-fixed">
           <thead className="sticky top-0 z-20">
             {/* Row 1: Header Titles */}

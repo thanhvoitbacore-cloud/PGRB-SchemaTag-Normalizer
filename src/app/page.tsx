@@ -72,7 +72,7 @@ export default function Home() {
   };
 
   return (
-    <main className="max-w-[92vw] mx-auto px-6 py-6 md:py-8 flex flex-col h-screen overflow-hidden">
+    <main className="max-w-[94vw] mx-auto px-4 py-4 md:py-6 flex flex-col h-[100dvh] overflow-hidden">
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 shrink-0">
         <div className="flex items-center gap-4">
           <Wand2 size={40} className="text-accent shrink-0" />
@@ -122,9 +122,9 @@ export default function Home() {
         )}
       </div>
 
-      <footer className="mt-8 py-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 shrink-0">
-        <p className="text-lg font-bold">&copy; 2024 PGRB Tools Ecosystem</p>
-        <p className="text-sm uppercase tracking-widest opacity-50 font-black">Precision • Accuracy • Performance</p>
+      <footer className="mt-4 py-4 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 shrink-0">
+        <p className="text-base font-bold">&copy; 2024 PGRB Tools Ecosystem</p>
+        <p className="text-[10px] uppercase tracking-[0.3em] opacity-40 font-black">Precision • Accuracy • Performance</p>
       </footer>
     </main>
   );
