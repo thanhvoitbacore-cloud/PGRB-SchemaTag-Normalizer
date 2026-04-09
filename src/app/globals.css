@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 248, 250, 252;
+  --background-start-rgb: 15, 23, 42;
+  --background-end-rgb: 0, 0, 0;
+
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  
+  font-size: 18px;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  min-height: 100vh;
+}
+
+@layer components {
+  .glass {
+    @apply bg-slate-900/60 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)];
+  }
+  
+  .btn-primary {
+    @apply bg-primary-gradient text-white font-black py-5 px-14 rounded-[1.5rem] 
+           text-2xl hover:scale-[1.02] active:scale-[0.98] transition-all 
+           shadow-2xl shadow-indigo-500/30 flex items-center justify-center gap-4;
+  }
+
+  .btn-secondary {
+    @apply bg-white/5 text-slate-200 font-bold py-5 px-14 rounded-[1.5rem] 
+           text-2xl hover:bg-white/10 active:scale-[0.98] transition-all 
+           border border-white/10 flex items-center justify-center gap-4 shadow-xl;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
