@@ -130,22 +130,13 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-          className="flex-1 min-h-0 overflow-hidden flex flex-col"
-        >
-          {activeTab === "p1" ? (
-            <DataTable data={filteredP1} />
-          ) : (
-            <DataTable data={filteredP2} />
-          )}
-        </motion.div>
-      </AnimatePresence>
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col bg-slate-900/40 rounded-[2.5rem] border border-white/5 shadow-inner">
+        {activeTab === "p1" ? (
+          <DataTable data={filteredP1} />
+        ) : (
+          <DataTable data={filteredP2} />
+        )}
+      </div>
     </motion.div>
   );
 }
