@@ -58,9 +58,17 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                 if (tagValue === "") continue;
 
                 const fullStagid = String(rows[0][j] || "");
+                if (fullStagid.toLowerCase().includes("attributeswhy")) {
+                    break;
+                }
+
                 const normalizedStagid = fullStagid.includes(":") 
                     ? fullStagid.split(":").pop()?.trim() || fullStagid
                     : fullStagid;
+
+                if (normalizedStagid.toLowerCase().startsWith("existing_")) {
+                    continue;
+                }
 
                 allResults.push({
                     "Manufacturer Part Id": String(dataRow[4] || ""),

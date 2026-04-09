@@ -35,8 +35,8 @@ export const process2 = (workbook: XLSX.WorkBook): SchemaTagReference[] => {
 
         const numCols = cleanRows[0].length;
         for (let j = 0; j < numCols; j++) {
-            const tagNameId = String(cleanRows[1][j] || "").trim();
-            const tagType = String(cleanRows[1][j] || "").trim(); // Placeholder if Row 1 is used for Type too
+            const tagNameId = String(cleanRows[0][j] || "").trim();
+            const tagType = String(cleanRows[1][j] || "").trim();
             const requirement = String(cleanRows[2][j] || "").trim();
             const tagName = String(cleanRows[3][j] || "").trim();
             const tagDef = String(cleanRows[4][j] || "").trim();
@@ -49,6 +49,10 @@ export const process2 = (workbook: XLSX.WorkBook): SchemaTagReference[] => {
 
             if (tagNameId.toLowerCase().includes("attributeswhy")) {
                 break;
+            }
+
+            if (tagNameId.toLowerCase().startsWith("existing_")) {
+                continue;
             }
 
             let extractedTagId = tagNameId;
