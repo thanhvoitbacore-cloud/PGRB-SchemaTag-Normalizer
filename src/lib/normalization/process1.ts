@@ -28,39 +28,21 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
 
         if (rows.length < 5) return;
 
-        // --- CLEANING LOGIC ---
-        // Delete Rows 2, 5, 7 (1-indexed)
-        if (rows.length >= 7) rows.splice(6, 1);
-        if (rows.length >= 5) rows.splice(4, 1);
-        if (rows.length >= 2) rows.splice(1, 1);
-
-        // Delete Columns A, B, D, G
-        rows = rows.map(row => {
-            let newRow = [...row];
-            if (newRow.length >= 7) newRow.splice(6, 1); // G
-            if (newRow.length >= 4) newRow.splice(3, 1); // D
-            if (newRow.length >= 2) newRow.splice(1, 1); // B
-            if (newRow.length >= 1) newRow.splice(0, 1); // A
-            return newRow;
-        });
-
-        // Trailing Truncation
-        let lastColToKeep = rows[0].length;
-        for (let j = 0; j < rows[0].length; j++) {
-            if (String(rows[0][j]).trim().toLowerCase() === "attributeswhy") {
-                lastColToKeep = j;
-                break;
-            }
-        }
-        rows = rows.map(row => row.slice(0, lastColToKeep));
-
         // --- TRANSPOSE LOGIC ---
-        const tagStartCol = 3;
-        const dataStartRow = 4;
+        // Assuming original column structure where:
+        // C (index 2) = PrSKU
+        // D (index 3) = SKU Type
+        // E (index 4) = Manufacturer Part Id
+        // F (index 5) = Supplier Partnumber
+        // G (index 6) = Manufacturer Part Number
+        // H+ (index 7+) = Tags
+
+        const tagStartCol = 7;
+        const dataStartRow = 6; // Data starts after header rows (Original Row 7)
 
         for (let i = dataStartRow; i < rows.length; i++) {
             const dataRow = rows[i];
-            if (!dataRow[0] && !dataRow[1]) continue;
+            if (!dataRow[2] && !dataRow[4]) continue; // Check PrSKU and Part Id
 
             for (let j = tagStartCol; j < rows[0].length; j++) {
                 const tagValue = String(dataRow[j] || "").trim();
@@ -72,19 +54,19 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                     : fullStagid;
 
                 allResults.push({
-                    "Manufacturer Part Id": String(dataRow[1]),
-                    "PrSKU (Wayfair Listing)": String(dataRow[0]),
-                    "SKU Type": "",
-                    "Manufacturer Part Number": "",
-                    "Supplier Partnumber": String(dataRow[2]),
+                    "Manufacturer Part Id": String(dataRow[4] || ""),
+                    "PrSKU (Wayfair Listing)": String(dataRow[2] || ""),
+                    "SKU Type": String(dataRow[3] || ""),
+                    "Manufacturer Part Number": String(dataRow[6] || ""),
+                    "Supplier Partnumber": String(dataRow[5] || ""),
                     "Product Option": "",
                     "Stagid": normalizedStagid,
-                    "Schema Tag Title": String(rows[2][j] || ""),
+                    "Schema Tag Title": String(rows[3][j] || ""),
                     "Current schema_tag_value": tagValue,
-                    "Schema tag priority": rows[1][j] as string | number,
+                    "Schema tag priority": rows[2][j] as string | number,
                     "Does schema show on site?": "",
                     "Tag Definition": "",
-                    "How should the tags be filled in on the tool?": String(rows[3][j] || ""),
+                    "How should the tags be filled in on the tool?": String(rows[5][j] || ""),
                     "Input Type": ""
                 });
             }

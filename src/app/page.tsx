@@ -29,9 +29,33 @@ export default function Home() {
 
       // Process 2
       const p2Results = process2(workbook);
-      setProgress(90);
+      setProgress(85);
 
-      setData({ p1: p1Results, p2: p2Results });
+      // --- ENRICHMENT LOGIC ---
+      // Create a lookup map from p2 results using Extracted Tag ID
+      const tagMap = new Map();
+      p2Results.forEach(tag => {
+        if (tag["Extracted Tag ID"]) {
+          tagMap.set(tag["Extracted Tag ID"], tag);
+        }
+      });
+
+      // Enrich p1Results with information from p2Results
+      const enrichedP1 = p1Results.map(row => {
+        const tagInfo = tagMap.get(row.Stagid);
+        if (tagInfo) {
+          return {
+            ...row,
+            "Tag Definition": tagInfo.Definition || "",
+            "Input Type": tagInfo["Input Type"] || "",
+            "Does schema show on site?": tagInfo.Requirement || "",
+            "SKU Type": tagInfo["Class ID"] || ""
+          };
+        }
+        return row;
+      });
+
+      setData({ p1: enrichedP1, p2: p2Results });
       setStatus("success");
       setProgress(100);
     } catch (error) {
