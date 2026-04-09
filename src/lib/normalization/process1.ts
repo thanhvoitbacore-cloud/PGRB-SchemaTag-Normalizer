@@ -42,7 +42,16 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
 
         for (let i = dataStartRow; i < rows.length; i++) {
             const dataRow = rows[i];
-            if (!dataRow[2] && !dataRow[4]) continue; // Check PrSKU and Part Id
+            
+            // SKIP logic: 
+            // 1. Skip if PrSKU (index 2) or Part Id (index 4) is empty
+            // 2. Skip if PrSKU is "Possible Options" (template noise)
+            const prSku = String(dataRow[2] || "").trim();
+            const partId = String(dataRow[4] || "").trim();
+            
+            if (!prSku || !partId || prSku.toLowerCase().includes("possible options")) {
+                continue;
+            }
 
             for (let j = tagStartCol; j < rows[0].length; j++) {
                 const tagValue = String(dataRow[j] || "").trim();
