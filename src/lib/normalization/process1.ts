@@ -57,14 +57,14 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                 const tagValue = String(dataRow[j] || "").trim();
                 if (tagValue === "") continue;
 
-                const fullStagid = String(rows[0][j] || "");
+                const fullStagid = String(rows[0][j] || "").trim();
                 if (fullStagid.toLowerCase().includes("attributeswhy")) {
                     break;
                 }
 
                 const normalizedStagid = fullStagid.includes(":") 
                     ? fullStagid.split(":").pop()?.trim() || fullStagid
-                    : fullStagid;
+                    : fullStagid.trim();
 
                 if (normalizedStagid.toLowerCase().startsWith("existing_")) {
                     continue;

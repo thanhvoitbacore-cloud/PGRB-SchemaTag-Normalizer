@@ -55,11 +55,11 @@ export const process2 = (workbook: XLSX.WorkBook): SchemaTagReference[] => {
                 continue;
             }
 
-            let extractedTagId = tagNameId;
+            let extractedTagId = tagNameId.trim();
             if (tagNameId.includes("::")) {
-                extractedTagId = tagNameId.split("::").pop()?.trim() || tagNameId;
+                extractedTagId = tagNameId.split("::").pop()?.trim() || tagNameId.trim();
             } else if (tagNameId.includes(":")) {
-                extractedTagId = tagNameId.split(":").pop()?.trim() || tagNameId;
+                extractedTagId = tagNameId.split(":").pop()?.trim() || tagNameId.trim();
             }
             extractedTagId = extractedTagId.trim();
 
