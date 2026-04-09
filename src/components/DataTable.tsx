@@ -58,8 +58,8 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
         </div>
       )}
       
-      <div className="flex-1 w-full overflow-auto rounded-[1.5rem] border-2 border-white/10 glass relative shadow-2xl custom-scrollbar min-h-0 bg-slate-900/40">
-        <table className="w-full border-collapse text-xs min-w-[2000px] table-auto">
+      <div className="flex-1 w-full overflow-auto rounded-xl border-2 border-white/20 glass relative shadow-2xl min-h-0 bg-slate-900/60 max-h-[calc(100vh-350px)]">
+        <table className="w-full border-collapse text-[10px] min-w-[2500px] table-fixed">
           <thead className="sticky top-0 z-20">
             {/* Row 1: Header Titles */}
             <tr className="bg-slate-900 shadow-xl">
