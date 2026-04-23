@@ -73,8 +73,8 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                 allResults.push({
                     "Manufacturer Part Id": String(dataRow[4] || ""),
                     "PrSKU (Wayfair Listing)": String(dataRow[2] || ""),
-                    "SKU Type": String(dataRow[3] || ""),
-                    "Manufacturer Part Number": String(dataRow[6] || ""),
+                    "SKU Type": "",
+                    "Manufacturer Part Number": "",
                     "Supplier Partnumber": String(dataRow[5] || ""),
                     "Product Option": "",
                     "Stagid": normalizedStagid,

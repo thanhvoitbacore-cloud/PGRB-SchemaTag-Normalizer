@@ -48,8 +48,8 @@ export default function Home() {
             ...row,
             "Tag Definition": tagInfo.Definition || "",
             "Input Type": tagInfo["Input Type"] || "",
-            "Does schema show on site?": tagInfo.Requirement || "",
-            "SKU Type": tagInfo["Class ID"] || ""
+            "Does schema show on site?": "",
+            "SKU Type": ""
           };
         }
         return row;
