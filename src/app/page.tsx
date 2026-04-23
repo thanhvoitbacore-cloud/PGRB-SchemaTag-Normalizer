@@ -72,7 +72,7 @@ export default function Home() {
   };
 
   return (
-    <main className="max-w-full mx-auto px-4 py-2 flex flex-col h-[100dvh] overflow-hidden bg-slate-50">
+    <main className="max-w-full mx-auto px-4 py-2 flex flex-col h-screen h-[100dvh] overflow-hidden bg-slate-50 relative">
       <header className="flex justify-between items-center gap-4 mb-2 shrink-0 h-12">
         <div className="flex items-center gap-3">
           <Wand2 size={24} className="text-indigo-600 shrink-0" />
