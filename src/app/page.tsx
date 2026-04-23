@@ -72,42 +72,42 @@ export default function Home() {
   };
 
   return (
-    <main className="max-w-[94vw] mx-auto px-4 py-4 md:py-6 flex flex-col h-[100dvh] overflow-hidden">
-      <header className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <Wand2 size={40} className="text-accent shrink-0" />
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter">
-            PGRB <span className="text-indigo-400">SchemaTags</span> <span className="text-slate-500 font-extralight italic text-2xl">Normalizer</span>
+    <main className="max-w-full mx-auto px-4 py-2 flex flex-col h-[100dvh] overflow-hidden bg-slate-50">
+      <header className="flex justify-between items-center gap-4 mb-2 shrink-0 h-12">
+        <div className="flex items-center gap-3">
+          <Wand2 size={24} className="text-indigo-600 shrink-0" />
+          <h1 className="text-xl font-black tracking-tighter text-slate-900">
+            PGRB <span className="text-indigo-600">SchemaTags</span> <span className="text-slate-400 font-medium italic text-sm">Normalizer</span>
           </h1>
         </div>
         <div className={cn(
-          "px-6 py-2 rounded-xl text-sm font-black border-2 uppercase tracking-[0.2em] glass",
-          status === "idle" && "border-white/5 text-slate-500",
-          status === "processing" && "border-accent text-accent animate-pulse",
-          status === "success" && "border-success text-success shadow-[0_0_30px_rgba(16,185,129,0.3)]",
-          status === "error" && "border-error text-error"
+          "px-4 py-1 rounded-full text-[10px] font-black border-2 uppercase tracking-widest",
+          status === "idle" && "border-slate-200 text-slate-400 bg-white",
+          status === "processing" && "border-indigo-200 text-indigo-600 bg-indigo-50 animate-pulse",
+          status === "success" && "border-emerald-200 text-emerald-600 bg-emerald-50",
+          status === "error" && "border-red-200 text-red-600 bg-red-50"
         )}>
           {status}
         </div>
       </header>
 
-      <div className="flex-1 overflow-hidden flex flex-col items-stretch">
+      <div className="flex-1 overflow-hidden flex flex-col items-stretch min-h-0">
         {status === "idle" && (
-          <div className="w-full max-w-2xl py-20 flex-1 flex flex-col justify-center mx-auto">
+          <div className="w-full max-w-xl py-20 flex-1 flex flex-col justify-center mx-auto">
             <FileUploader onFileSelect={handleFileSelect} isProcessing={false} />
           </div>
         )}
 
         {status === "processing" && (
-          <div className="w-full max-w-xl text-center py-40 flex-1 flex flex-col justify-center mx-auto">
-            <div className="w-full bg-white/5 rounded-full h-4 mb-8 overflow-hidden border border-white/5">
+          <div className="w-full max-w-md text-center py-20 flex-1 flex flex-col justify-center mx-auto">
+            <div className="w-full bg-slate-200 rounded-full h-3 mb-6 overflow-hidden border border-slate-300/50">
               <div 
-                className="h-full bg-primary-gradient shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-500 ease-out" 
+                className="h-full bg-primary-gradient transition-all duration-500 ease-out" 
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-slate-300 text-2xl font-semibold mb-3">Processing Data...</p>
-            <p className="text-slate-500 text-xl uppercase tracking-widest font-bold">{progress}% Complete</p>
+            <p className="text-slate-600 text-lg font-bold mb-1">Processing Data...</p>
+            <p className="text-slate-400 text-sm uppercase tracking-widest font-black">{progress}% Complete</p>
           </div>
         )}
 
@@ -122,9 +122,9 @@ export default function Home() {
         )}
       </div>
 
-      <footer className="mt-4 py-4 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 shrink-0">
-        <p className="text-base font-bold">&copy; 2024 PGRB Tools Ecosystem</p>
-        <p className="text-[10px] uppercase tracking-[0.3em] opacity-40 font-black">Precision • Accuracy • Performance</p>
+      <footer className="mt-2 py-2 border-t border-slate-200 flex justify-between items-center gap-4 text-slate-400 shrink-0 h-8">
+        <p className="text-[10px] font-bold">&copy; 2024 PGRB Tools Ecosystem</p>
+        <p className="text-[8px] uppercase tracking-[0.2em] opacity-60 font-black">Precision • Accuracy • Performance</p>
       </footer>
     </main>
   );

@@ -51,7 +51,7 @@ export default function FileUploader({ onFileSelect, isProcessing }: FileUploade
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "glass rounded-[2rem] p-16 text-center transition-all duration-300",
-        isDragOver ? "border-accent bg-slate-800/90 scale-[1.02]" : "hover:border-white/20"
+        isDragOver ? "border-indigo-500 bg-white scale-[1.02]" : "hover:border-indigo-200"
       )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -70,13 +70,13 @@ export default function FileUploader({ onFileSelect, isProcessing }: FileUploade
         <motion.div
           animate={isProcessing ? { scale: [1, 1.1, 1], opacity: [1, 0.5, 1] } : {}}
           transition={{ repeat: Infinity, duration: 2 }}
-          className="w-24 h-24 mb-8 text-accent flex items-center justify-center bg-primary-gradient rounded-full p-6 shadow-xl shadow-indigo-500/20"
+          className="w-20 h-20 mb-8 text-indigo-600 flex items-center justify-center bg-indigo-50 rounded-full p-5 border-2 border-indigo-100"
         >
-          <CloudUpload size={48} className="text-white" />
+          <CloudUpload size={40} className="text-indigo-600" />
         </motion.div>
 
-        <h2 className="text-3xl font-bold mb-3">Upload Product Attributes</h2>
-        <p className="text-slate-400 mb-8 max-w-md mx-auto">
+        <h2 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Upload Product Attributes</h2>
+        <p className="text-slate-500 mb-8 max-w-sm mx-auto text-sm font-medium">
           Drag and drop your Excel file here or click the button below to browse your devices
         </p>
 
@@ -88,9 +88,9 @@ export default function FileUploader({ onFileSelect, isProcessing }: FileUploade
           Select File
         </label>
 
-        <div className="mt-10 flex items-center gap-2 text-slate-500 text-sm justify-center">
-          <Info size={16} />
-          <span>File name must contain <strong>"Product Attributes"</strong></span>
+        <div className="mt-10 flex items-center gap-2 text-slate-400 text-xs justify-center font-bold uppercase tracking-widest">
+          <Info size={14} />
+          <span>Filename must contain <strong className="text-indigo-600">"Product Attributes"</strong></span>
         </div>
       </div>
     </motion.div>

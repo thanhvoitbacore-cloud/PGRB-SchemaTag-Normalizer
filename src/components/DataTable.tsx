@@ -46,28 +46,16 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 flex-1 min-h-0 overflow-hidden">
-      {Object.keys(columnFilters).length > 0 && (
-        <div className="flex justify-end shrink-0">
-          <button 
-            onClick={clearFilters}
-            className="text-accent hover:text-accent/80 font-black flex items-center gap-3 text-xl transition-colors bg-white/5 px-8 py-3 rounded-2xl border border-white/5"
-          >
-            <FilterX size={28} />
-            Clear all filters
-          </button>
-        </div>
-      )}
-      
-      <div className="flex-1 w-full overflow-y-scroll overflow-x-auto rounded-xl border-2 border-white/20 glass relative shadow-2xl min-h-[400px] bg-slate-900/60">
-        <table className="w-full border-collapse text-[10px] min-w-[2500px] table-fixed">
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex-1 w-full overflow-auto relative min-h-0">
+        <table className="w-full border-collapse text-[11px] min-w-[2000px] table-fixed">
           <thead className="sticky top-0 z-20">
             {/* Row 1: Header Titles */}
-            <tr className="bg-slate-900 shadow-xl">
+            <tr className="bg-slate-50 border-b border-slate-200 shadow-sm">
               {headers.map((header) => (
                 <th
                   key={`title-${header}`}
-                  className="text-left px-4 py-3 text-accent font-black tracking-tighter uppercase text-xs border-b border-white/5 align-bottom h-16"
+                  className="text-left px-4 py-2 text-indigo-700 font-black tracking-tighter uppercase text-[10px] align-bottom h-12"
                 >
                   <div className="line-clamp-2" title={header}>
                     {header}
@@ -76,18 +64,18 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
               ))}
             </tr>
             {/* Row 2: Filter Inputs */}
-            <tr className="bg-slate-900">
+            <tr className="bg-white">
               {headers.map((header) => (
                 <th
                   key={`filter-${header}`}
-                  className="px-3 py-2 border-b-2 border-white/10"
+                  className="px-2 py-1.5 border-b border-slate-100"
                 >
                   <div className="relative">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-300" />
                     <input
                       type="text"
-                      placeholder={`Search...`}
-                      className="w-full bg-slate-950/50 border border-white/5 rounded-lg py-2 pl-9 pr-3 text-xs outline-none focus:border-accent focus:bg-slate-950 transition-all text-white font-bold placeholder:text-slate-700"
+                      placeholder={`Filter...`}
+                      className="w-full bg-slate-50 border border-slate-100 rounded-lg py-1.5 pl-8 pr-2 text-[10px] outline-none focus:border-indigo-300 focus:bg-white transition-all text-slate-700 font-bold placeholder:text-slate-300"
                       value={columnFilters[header] || ""}
                       onChange={(e) => handleFilterChange(header, e.target.value)}
                     />
@@ -96,19 +84,16 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10 bg-slate-950/20">
+          <tbody className="divide-y divide-slate-100">
             {displayData.map((row, i) => (
-              <tr key={i} className="hover:bg-white/5 transition-colors group">
+              <tr key={i} className="hover:bg-slate-50/80 transition-colors group">
                 {headers.map((header) => (
                   <td
                     key={`${i}-${header}`}
-                    className="px-4 py-2 text-slate-200 group-hover:text-white transition-colors"
+                    className="px-4 py-2 text-slate-600 group-hover:text-slate-900 transition-colors"
                   >
-                    <div 
-                      className="max-w-[400px] truncate font-bold text-xs"
-                      title={String(row[header] || "")}
-                    >
-                      {row[header] || <span className="text-slate-800 italic text-[10px]">null</span>}
+                    <div className="max-w-[400px] truncate font-bold text-xs" title={String(row[header] || "")}>
+                      {row[header] || <span className="text-slate-300 italic text-[10px]">empty</span>}
                     </div>
                   </td>
                 ))}
@@ -117,8 +102,8 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
             
             {filteredData.length === 0 && (
               <tr>
-                <td colSpan={headers.length} className="p-40 text-center text-slate-600 italic text-3xl font-light">
-                  No matching records found for these filters.
+                <td colSpan={headers.length} className="p-20 text-center text-slate-300 italic text-xl font-medium">
+                  No matching records found.
                 </td>
               </tr>
             )}
@@ -127,9 +112,9 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
               <tr>
                 <td
                   colSpan={headers.length}
-                  className="p-8 text-center text-accent font-black bg-white/5 text-lg tracking-tighter"
+                  className="p-4 text-center text-indigo-600 font-black bg-indigo-50 text-sm tracking-tighter"
                 >
-                  ... and {filteredData.length - limit} more matching records (Export All Results to see all) ...
+                  ... Showing first {limit} of {filteredData.length} records ...
                 </td>
               </tr>
             )}
