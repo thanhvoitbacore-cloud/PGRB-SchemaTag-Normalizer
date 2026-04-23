@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Search, FilterX } from "lucide-react";
+import { Search, FilterX, X, Maximize2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -10,8 +10,9 @@ interface DataTableProps {
   limit?: number;
 }
 
-export default function DataTable({ data, limit = 1000 }: DataTableProps) {
+export default function DataTable({ data }: DataTableProps) {
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [selectedCell, setSelectedCell] = useState<{ header: string; value: string } | null>(null);
 
   const headers = useMemo(() => (data.length > 0 ? Object.keys(data[0]) : []), [data]);
 
@@ -25,7 +26,7 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
     });
   }, [data, columnFilters]);
 
-  const displayData = useMemo(() => filteredData.slice(0, limit), [filteredData, limit]);
+  const displayData = filteredData; // Render all data as requested
 
   const handleFilterChange = (header: string, value: string) => {
     setColumnFilters((prev) => ({
@@ -92,7 +93,12 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
                     key={`${i}-${header}`}
                     className="px-4 py-2 text-slate-600 group-hover:text-slate-900 transition-colors"
                   >
-                    <div className="max-w-[400px] truncate font-bold text-xs" title={String(row[header] || "")}>
+                    <div 
+                      className="max-w-[400px] truncate font-bold text-xs cursor-pointer hover:text-indigo-600 hover:underline flex items-center gap-2" 
+                      title="Click to view full content"
+                      onClick={() => setSelectedCell({ header, value: String(row[header] || "") })}
+                    >
+                      {String(row[header]).length > 40 && <Maximize2 size={10} className="text-slate-300 shrink-0" />}
                       {row[header] || <span className="text-slate-300 italic text-[10px]">empty</span>}
                     </div>
                   </td>
@@ -107,20 +113,53 @@ export default function DataTable({ data, limit = 1000 }: DataTableProps) {
                 </td>
               </tr>
             )}
-
-            {filteredData.length > limit && (
-              <tr>
-                <td
-                  colSpan={headers.length}
-                  className="p-4 text-center text-indigo-600 font-black bg-indigo-50 text-sm tracking-tighter"
-                >
-                  ... Showing first {limit} of {filteredData.length} records ...
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
+
+      {/* Full Content Modal */}
+      <AnimatePresence>
+        {selectedCell && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedCell(null)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-2xl max-h-[70vh] bg-white border border-slate-200 rounded-3xl shadow-2xl flex flex-col overflow-hidden"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50/50">
+                <h3 className="text-indigo-700 font-black uppercase tracking-tighter text-sm">{selectedCell.header}</h3>
+                <button 
+                  onClick={() => setSelectedCell(null)}
+                  className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-400 hover:text-slate-900"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-auto p-8">
+                <div className="text-slate-700 text-lg font-medium leading-relaxed whitespace-pre-wrap break-words">
+                  {selectedCell.value || <span className="text-slate-300 italic font-normal">Empty cell</span>}
+                </div>
+              </div>
+              <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+                <button 
+                  onClick={() => setSelectedCell(null)}
+                  className="px-6 py-2 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl font-black text-xs uppercase tracking-widest transition-all text-slate-600 shadow-sm"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
