@@ -49,7 +49,7 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col gap-2 w-full flex-1 min-h-0 overflow-hidden"
+      className="flex flex-col gap-2 w-full flex-1 min-h-0 h-full overflow-hidden"
     >
       {/* Top Controls: Stats, Tabs, Search, Export */}
       <div className="flex flex-wrap items-center gap-4 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm shrink-0">

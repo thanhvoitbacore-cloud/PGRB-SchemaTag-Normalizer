@@ -112,7 +112,7 @@ export default function Home() {
         )}
 
         {status === "success" && (
-          <div className="w-full flex-1 min-h-0 overflow-hidden">
+          <div className="w-full flex-1 min-h-0 h-full relative overflow-hidden">
             <ResultsDashboard 
               p1Data={data.p1} 
               p2Data={data.p2} 
