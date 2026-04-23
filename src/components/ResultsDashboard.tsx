@@ -49,9 +49,6 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
       className="flex flex-col gap-2 w-full flex-1 min-h-0 overflow-hidden"
     >
       {/* Top Controls: Stats, Tabs, Search, Export */}
@@ -120,7 +117,7 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 flex flex-col bg-slate-900/40 rounded-[1.5rem] border border-white/5 shadow-inner p-4 overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden">
         {activeTab === "p1" ? (
           <DataTable data={filteredP1} />
         ) : (
