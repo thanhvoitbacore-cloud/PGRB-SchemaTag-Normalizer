@@ -83,7 +83,7 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                     "Schema tag priority": rows[2][j] as string | number,
                     "Does schema show on site?": "",
                     "Tag Definition": "",
-                    "How should the tags be filled in on the tool?": String(rows[5][j] || ""),
+                    "How should the tags be filled in on the tool?": "",
                     "Input Type": ""
                 });
             }
