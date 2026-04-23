@@ -58,8 +58,15 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                 if (tagValue === "") continue;
 
                 const fullStagid = String(rows[0][j] || "").trim();
-                if (fullStagid.toLowerCase().includes("attributeswhy")) {
-                    break;
+                const tagTitle = String(rows[3][j] || "").trim();
+                
+                // SKIP technical or empty columns
+                if (!fullStagid || 
+                    fullStagid.toLowerCase().includes("hash") || 
+                    fullStagid.toLowerCase().includes("attributeswhy") ||
+                    !tagTitle) {
+                    if (fullStagid.toLowerCase().includes("attributeswhy")) break;
+                    continue;
                 }
 
                 const normalizedStagid = fullStagid.includes(":") 

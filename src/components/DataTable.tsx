@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Search, FilterX, X, Maximize2 } from "lucide-react";
+import { Search, FilterX, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -94,11 +94,10 @@ export default function DataTable({ data }: DataTableProps) {
                     className="px-4 py-2 text-slate-600 group-hover:text-slate-900 transition-colors"
                   >
                     <div 
-                      className="max-w-[400px] truncate font-bold text-xs cursor-pointer hover:text-indigo-600 hover:underline flex items-center gap-2" 
+                      className="w-full truncate font-bold text-xs cursor-pointer hover:text-indigo-600 hover:underline" 
                       title="Click to view full content"
                       onClick={() => setSelectedCell({ header, value: String(row[header] || "") })}
                     >
-                      {String(row[header]).length > 40 && <Maximize2 size={10} className="text-slate-300 shrink-0" />}
                       {row[header] || <span className="text-slate-300 italic text-[10px]">empty</span>}
                     </div>
                   </td>
