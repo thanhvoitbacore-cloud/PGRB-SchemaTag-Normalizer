@@ -32,23 +32,22 @@ export default function Home() {
       setProgress(85);
 
       // --- ENRICHMENT LOGIC ---
-      // Create a lookup map from p2 results using the full TagName_Tag ID
+      // Create a lookup map from p2 results using the Extracted Tag ID (numeric tail)
       const tagMap = new Map();
       p2Results.forEach(tag => {
-        if (tag["TagName_Tag ID"]) {
-          tagMap.set(tag["TagName_Tag ID"], tag);
+        if (tag["Extracted Tag ID"]) {
+          tagMap.set(tag["Extracted Tag ID"], tag);
         }
       });
 
       // Enrich p1Results with information from p2Results
       const enrichedP1 = p1Results.map(row => {
-        const tagInfo = tagMap.get(row.stagid);
+        const tagInfo = tagMap.get(row.Stagid); // Stagid is numeric tail in process1.ts
         if (tagInfo) {
           return {
             ...row,
-            "Tag Definition": tagInfo["Tag Definition"] || "",
-            "Input Type": tagInfo["Input Type"] || "",
-            "How to fill tag": tagInfo["Dropdown Value"] || row["How to fill tag"]
+            "Tag Definition": tagInfo["Input Type"] || "",
+            "Input Type": tagInfo["Dropdown Value"] || row["Input Type"]
           };
         }
         return row;

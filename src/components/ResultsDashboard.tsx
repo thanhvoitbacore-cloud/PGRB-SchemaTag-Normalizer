@@ -34,7 +34,7 @@ export default function ResultsDashboard({ p1Data, p2Data, onReset }: ResultsDas
   }, [p2Data, searchTerm]);
 
   const skuCount = useMemo(() => {
-    const skus = new Set(p1Data.map(row => row["Wayfair Listing"]).filter(Boolean));
+    const skus = new Set(p1Data.map(row => row["PrSKU"]).filter(Boolean));
     return skus.size;
   }, [p1Data]);
 
