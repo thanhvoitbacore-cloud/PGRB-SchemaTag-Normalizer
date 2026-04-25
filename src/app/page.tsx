@@ -32,24 +32,22 @@ export default function Home() {
       setProgress(85);
 
       // --- ENRICHMENT LOGIC ---
-      // Create a lookup map from p2 results using Extracted Tag ID
+      // Create a lookup map from p2 results using the full TagName_Tag ID
       const tagMap = new Map();
       p2Results.forEach(tag => {
-        if (tag["Extracted Tag ID"]) {
-          tagMap.set(tag["Extracted Tag ID"], tag);
+        if (tag["TagName_Tag ID"]) {
+          tagMap.set(tag["TagName_Tag ID"], tag);
         }
       });
 
       // Enrich p1Results with information from p2Results
       const enrichedP1 = p1Results.map(row => {
-        const tagInfo = tagMap.get(row.Stagid);
+        const tagInfo = tagMap.get(row.stagid);
         if (tagInfo) {
           return {
             ...row,
-            "Tag Definition": tagInfo.Definition || "",
+            "Tag Definition": tagInfo["Tag Definition"] || "",
             "Input Type": tagInfo["Input Type"] || "",
-            "Does schema show on site?": "",
-            "SKU Type": ""
           };
         }
         return row;

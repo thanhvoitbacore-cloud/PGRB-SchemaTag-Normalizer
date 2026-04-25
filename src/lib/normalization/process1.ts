@@ -1,55 +1,48 @@
 import * as XLSX from 'xlsx';
 
 export interface ProductAttributeRow {
-    "Manufacturer Part Id": string;
-    "PrSKU (Wayfair Listing)": string;
-    "SKU Type": string;
-    "Manufacturer Part Number": string;
-    "Supplier Partnumber": string;
-    "Product Option": string;
-    "Stagid": string;
-    "Schema Tag Title": string;
-    "Current schema_tag_value": string;
-    "Schema tag priority": string | number;
-    "Does schema show on site?": string;
-    "Tag Definition": string;
-    "How should the tags be filled in on the tool?": string;
-    "Input Type": string;
+    "Wayfair Listing": string;
+    "Manufacturer Part Number ID": string;
+    "Su Part Number": string;
+    "stagid": string;
+    "schema tag priority": string | number;
+    "Tag Name": string;
+    "Tag Value": string;
+    "How to fill tag": string;
+    // Keeping some extra fields for enrichment logic but they won't be in the final export if not needed
+    "Tag Definition"?: string;
+    "Input Type"?: string;
 }
 
 export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
     let allResults: ProductAttributeRow[] = [];
 
     workbook.SheetNames.forEach(sheetName => {
-        if (sheetName.toLowerCase() === "dropdownoptions") return;
+        if (sheetName.toLowerCase() === "dropdownoptions" || sheetName.toLowerCase() === "wf-only-metadata") return;
 
         const worksheet = workbook.Sheets[sheetName];
         let rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" }) as any[][];
 
-        if (rows.length < 5) return;
+        if (rows.length < 7) return;
 
         // --- TRANSPOSE LOGIC ---
-        // Assuming original column structure where:
-        // C (index 2) = PrSKU
-        // D (index 3) = SKU Type
-        // E (index 4) = Manufacturer Part Id
-        // F (index 5) = Supplier Partnumber
-        // G (index 6) = Manufacturer Part Number
-        // H+ (index 7+) = Tags
+        // Based on analysis of "Product Attributes" input file:
+        // Index 2 (C) = Wayfair Listing (sku)
+        // Index 3 (D) = Manufacturer Part Number
+        // Index 4 (E) = Manufacturer Part Id
+        // Index 5 (F) = Su Part Number (supplierPartNumber)
+        // Index 7+ (H+) = Tags
 
         const tagStartCol = 7;
-        const dataStartRow = 6; // Data starts after header rows (Original Row 7)
+        const dataStartRow = 6; // Data starts at Row 7 (index 6)
 
         for (let i = dataStartRow; i < rows.length; i++) {
             const dataRow = rows[i];
             
-            // SKIP logic: 
-            // 1. Skip if PrSKU (index 2) or Part Id (index 4) is empty
-            // 2. Skip if PrSKU is "Possible Options" (template noise)
-            const prSku = String(dataRow[2] || "").trim();
-            const partId = String(dataRow[4] || "").trim();
+            const wayfairListing = String(dataRow[2] || "").trim();
+            const mfgPartId = String(dataRow[3] || "").trim(); // VBA uses index 3 for "Manufacturer Part Number ID"
             
-            if (!prSku || !partId || prSku.toLowerCase().includes("possible options")) {
+            if (!wayfairListing || wayfairListing.toLowerCase().includes("possible options")) {
                 continue;
             }
 
@@ -58,40 +51,30 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                 if (tagValue === "") continue;
 
                 const fullStagid = String(rows[0][j] || "").trim();
-                const tagTitle = String(rows[3][j] || "").trim();
+                const tagName = String(rows[3][j] || "").trim(); // Row 4 (index 3) is "Tag Name"
                 
                 // SKIP technical or empty columns
                 if (!fullStagid || 
                     fullStagid.toLowerCase().includes("hash") || 
                     fullStagid.toLowerCase().includes("attributeswhy") ||
-                    !tagTitle) {
+                    !tagName) {
                     if (fullStagid.toLowerCase().includes("attributeswhy")) break;
                     continue;
                 }
 
-                const normalizedStagid = fullStagid.includes(":") 
-                    ? fullStagid.split(":").pop()?.trim() || fullStagid
-                    : fullStagid.trim();
-
-                if (normalizedStagid.toLowerCase().startsWith("existing_")) {
-                    continue;
-                }
+                // VBA Process 1 keeps the full stagid
+                const priority = rows[2][j] as string | number; // Row 3 (index 2) is "schema tag priority"
+                const howToFill = String(rows[5][j] || "").trim(); // Row 6 (index 5) is "How to fill tag"
 
                 allResults.push({
-                    "Manufacturer Part Id": String(dataRow[4] || ""),
-                    "PrSKU (Wayfair Listing)": String(dataRow[2] || ""),
-                    "SKU Type": "",
-                    "Manufacturer Part Number": "",
-                    "Supplier Partnumber": String(dataRow[5] || ""),
-                    "Product Option": "",
-                    "Stagid": normalizedStagid,
-                    "Schema Tag Title": String(rows[3][j] || ""),
-                    "Current schema_tag_value": tagValue,
-                    "Schema tag priority": rows[2][j] as string | number,
-                    "Does schema show on site?": "",
-                    "Tag Definition": "",
-                    "How should the tags be filled in on the tool?": "",
-                    "Input Type": ""
+                    "Wayfair Listing": wayfairListing,
+                    "Manufacturer Part Number ID": mfgPartId,
+                    "Su Part Number": String(dataRow[5] || ""), // Index 5 is Su Part Number
+                    "stagid": fullStagid,
+                    "schema tag priority": priority,
+                    "Tag Name": tagName,
+                    "Tag Value": tagValue,
+                    "How to fill tag": howToFill
                 });
             }
         }
