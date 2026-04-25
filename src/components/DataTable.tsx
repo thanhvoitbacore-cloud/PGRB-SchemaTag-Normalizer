@@ -1,18 +1,25 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Search, FilterX, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 interface DataTableProps {
   data: any[];
   limit?: number;
 }
 
+const ROW_HEIGHT = 36; // Estimated row height in pixels
+const BUFFER = 15;    // Number of extra rows to render above/below viewport
+
 export default function DataTable({ data }: DataTableProps) {
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
   const [selectedCell, setSelectedCell] = useState<{ header: string; value: string } | null>(null);
+  
+  // Virtualization state
+  const [scrollTop, setScrollTop] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const headers = useMemo(() => (data.length > 0 ? Object.keys(data[0]) : []), [data]);
 
@@ -26,16 +33,48 @@ export default function DataTable({ data }: DataTableProps) {
     });
   }, [data, columnFilters]);
 
-  const displayData = filteredData; // Render all data as requested
+  // Handle scroll event for virtualization
+  const onScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    setScrollTop(e.currentTarget.scrollTop);
+  }, []);
+
+  // Update container height on resize
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.clientHeight);
+      
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          setContainerHeight(entry.contentRect.height);
+        }
+      });
+      
+      resizeObserver.observe(containerRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, []);
+
+  // Calculate visible range
+  // Note: The headers take some height (approx 84px), but the sticky header 
+  // stays inside the container so the scrollTop remains 0-based for the content.
+  const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER);
+  const endIndex = Math.min(filteredData.length, Math.ceil((scrollTop + containerHeight) / ROW_HEIGHT) + BUFFER);
+
+  const visibleRows = useMemo(() => {
+    return filteredData.slice(startIndex, endIndex);
+  }, [filteredData, startIndex, endIndex]);
+
+  const paddingTop = startIndex * ROW_HEIGHT;
+  const paddingBottom = Math.max(0, (filteredData.length - endIndex) * ROW_HEIGHT);
 
   const handleFilterChange = (header: string, value: string) => {
     setColumnFilters((prev) => ({
       ...prev,
       [header]: value,
     }));
+    // Reset scroll to top when filtering
+    if (containerRef.current) containerRef.current.scrollTop = 0;
   };
-
-  const clearFilters = () => setColumnFilters({});
 
   if (!data || data.length === 0) {
     return (
@@ -48,15 +87,19 @@ export default function DataTable({ data }: DataTableProps) {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm relative overflow-hidden">
-      <div className="absolute inset-0 overflow-auto">
-        <table className="w-full border-collapse text-[11px] min-w-[2000px] table-fixed">
+      <div 
+        ref={containerRef}
+        onScroll={onScroll}
+        className="absolute inset-0 overflow-auto scroll-smooth"
+      >
+        <table className="w-full border-separate border-spacing-0 text-[11px] min-w-[2000px] table-fixed">
           <thead className="sticky top-0 z-20">
             {/* Row 1: Header Titles */}
-            <tr className="bg-slate-50 border-b border-slate-200 shadow-sm">
+            <tr className="bg-slate-50 shadow-sm">
               {headers.map((header) => (
                 <th
                   key={`title-${header}`}
-                  className="text-left px-4 py-2 text-indigo-700 font-black tracking-tighter uppercase text-[10px] align-bottom h-12"
+                  className="text-left px-4 py-2 text-indigo-700 font-black tracking-tighter uppercase text-[10px] align-bottom h-12 border-b border-slate-200 bg-slate-50"
                 >
                   <div className="line-clamp-2" title={header}>
                     {header}
@@ -69,7 +112,7 @@ export default function DataTable({ data }: DataTableProps) {
               {headers.map((header) => (
                 <th
                   key={`filter-${header}`}
-                  className="px-2 py-1.5 border-b border-slate-100"
+                  className="px-2 py-1.5 border-b border-slate-200 bg-white"
                 >
                   <div className="relative">
                     <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-300" />
@@ -85,25 +128,46 @@ export default function DataTable({ data }: DataTableProps) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
-            {displayData.map((row, i) => (
-              <tr key={i} className="hover:bg-slate-50/80 transition-colors group">
-                {headers.map((header) => (
-                  <td
-                    key={`${i}-${header}`}
-                    className="px-4 py-2 text-slate-600 group-hover:text-slate-900 transition-colors"
-                  >
-                    <div 
-                      className="w-full truncate font-bold text-xs cursor-pointer hover:text-indigo-600 hover:underline" 
-                      title="Click to view full content"
-                      onClick={() => setSelectedCell({ header, value: String(row[header] || "") })}
-                    >
-                      {row[header] || <span className="text-slate-300 italic text-[10px]">empty</span>}
-                    </div>
-                  </td>
-                ))}
+          <tbody>
+            {/* Top Spacer */}
+            {paddingTop > 0 && (
+              <tr>
+                <td style={{ height: `${paddingTop}px` }} colSpan={headers.length} />
               </tr>
-            ))}
+            )}
+            
+            {/* Visible Rows */}
+            {visibleRows.map((row, relativeIndex) => {
+              const actualIndex = startIndex + relativeIndex;
+              return (
+                <tr 
+                  key={actualIndex} 
+                  className="hover:bg-slate-50/80 transition-colors group h-[36px]"
+                >
+                  {headers.map((header) => (
+                    <td
+                      key={`${actualIndex}-${header}`}
+                      className="px-4 py-2 text-slate-600 group-hover:text-slate-900 transition-colors border-b border-slate-100"
+                    >
+                      <div 
+                        className="w-full truncate font-bold text-xs cursor-pointer hover:text-indigo-600 hover:underline" 
+                        title="Click to view full content"
+                        onClick={() => setSelectedCell({ header, value: String(row[header] || "") })}
+                      >
+                        {row[header] || <span className="text-slate-300 italic text-[10px]">empty</span>}
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+
+            {/* Bottom Spacer */}
+            {paddingBottom > 0 && (
+              <tr>
+                <td style={{ height: `${paddingBottom}px` }} colSpan={headers.length} />
+              </tr>
+            )}
             
             {filteredData.length === 0 && (
               <tr>
