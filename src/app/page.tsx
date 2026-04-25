@@ -46,10 +46,11 @@ export default function Home() {
         if (tagInfo) {
           return {
             ...row,
-            "Tag Definition": tagInfo.Definition || "",
+            "Tag Definition": tagInfo.Definition || row["Tag Definition"] || "",
+            "How should the tags be filled in on the tool?": tagInfo["Dropdown Value"] || "",
             "Input Type": tagInfo["Input Type"] || "",
-            "Does schema show on site?": "",
-            "SKU Type": ""
+            "Does schema show on site?": tagInfo["Requirement"] || "",
+            "SKU Type": "Standard"
           };
         }
         return row;

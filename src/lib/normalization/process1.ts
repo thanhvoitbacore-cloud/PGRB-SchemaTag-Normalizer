@@ -38,7 +38,7 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
         // H+ (index 7+) = Tags
 
         const tagStartCol = 7;
-        const dataStartRow = 6; // Data starts after header rows (Original Row 7)
+        const dataStartRow = 7; // Data starts after header rows (Original Row 8)
 
         for (let i = dataStartRow; i < rows.length; i++) {
             const dataRow = rows[i];
