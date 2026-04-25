@@ -50,6 +50,7 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                 if (!fullStagid || 
                     fullStagid.toLowerCase().includes("hash") || 
                     fullStagid.toLowerCase().includes("attributeswhy") ||
+                    fullStagid.toLowerCase().startsWith("existing_") ||
                     !tagName) {
                     continue;
                 }
