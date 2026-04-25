@@ -43,7 +43,6 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
 
             for (let j = tagStartCol; j < rows[0].length; j++) {
                 const tagValue = String(dataRow[j] || "").trim();
-                if (tagValue === "") continue;
 
                 const fullStagid = String(rows[0][j] || "").trim();
                 const tagName = String(rows[3][j] || "").trim(); // Row 4 (index 3) is "Tag Name"
