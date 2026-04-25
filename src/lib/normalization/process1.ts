@@ -62,15 +62,18 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                     continue;
                 }
 
+                // Extract only the numeric part of the stagid if possible
+                const normalizedStagid = fullStagid.split(':').pop()?.trim() || fullStagid;
+
                 // VBA Process 1 keeps the full stagid
                 const priority = rows[2][j] as string | number; // Row 3 (index 2) is "schema tag priority"
                 const howToFill = String(rows[5][j] || "").trim(); // Row 6 (index 5) is "How to fill tag"
 
                 allResults.push({
                     "Wayfair Listing": wayfairListing,
-                    "Manufacturer Part Number ID": mfgPartId,
-                    "Su Part Number": String(dataRow[5] || ""), // Index 5 is Su Part Number
-                    "stagid": fullStagid,
+                    "Manufacturer Part Number ID": String(dataRow[4] || "").trim(), // Index 4 is Manufacturer Part Id
+                    "Su Part Number": String(dataRow[5] || "").trim(), // Index 5 is Su Part Number
+                    "stagid": normalizedStagid,
                     "schema tag priority": priority,
                     "Tag Name": tagName,
                     "Tag Value": tagValue,

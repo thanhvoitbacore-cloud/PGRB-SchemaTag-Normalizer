@@ -48,6 +48,7 @@ export default function Home() {
             ...row,
             "Tag Definition": tagInfo["Tag Definition"] || "",
             "Input Type": tagInfo["Input Type"] || "",
+            "How to fill tag": tagInfo["Dropdown Value"] || row["How to fill tag"]
           };
         }
         return row;
