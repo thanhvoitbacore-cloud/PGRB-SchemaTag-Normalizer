@@ -51,7 +51,6 @@ export const process1 = (workbook: XLSX.WorkBook): ProductAttributeRow[] => {
                     fullStagid.toLowerCase().includes("hash") || 
                     fullStagid.toLowerCase().includes("attributeswhy") ||
                     !tagName) {
-                    if (fullStagid.toLowerCase().includes("attributeswhy")) break;
                     continue;
                 }
 
